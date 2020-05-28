@@ -1,0 +1,19 @@
+{
+    "name": "mock-api",
+    "version": "1.0.0",
+    "main": "app.js",
+    "license": "MIT",
+    "scripts": {
+        "start": "pm2 start app.js --watch --name mock-api",
+        "restart": "pm2 restart app.js --watch --name mock-api",
+        "stop": "pm2 stop mock-api",
+        "delete": "pm2 delete mock-api"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.17.1",
+        "mockjs": "^1.1.0"
+    },
+    "description": "前端本地 mock 接口数据",
+    "author": "damonshi"
+}
