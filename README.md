@@ -11,5 +11,4 @@ yarn run start
 
 ### 接口配置文件
 
-修改 mock.js 即可
-
+修改 mock.js 即可，例：访问 http://localhost:3000/api/random
