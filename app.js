@@ -16,9 +16,9 @@ const resType = {
 };
 
 const getRandomIntInclusive = function (min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 const resTimeout = function (timeout) {
@@ -41,35 +41,25 @@ const resTimeout = function (timeout) {
     }
 }
 
-const mockData = function (req, res, next) {
-    let path = req.path;
-    let rule = mockRule.filter((e) => e.path === path);
-    let { data, timeout } = rule.length && rule[0];
-    let mockMake = Mock.mock(data);
-    resType.data = mockMake;
-    resType.timeout = resTimeout(timeout);
-    let r = resType;
-    req.mockData = r;
-    next();
-};
-
 app.use(cors());
-app.use(mockData);
 
-app.get("*", (req, res) => {
-    let r = req.mockData;
-    setTimeout(() => {
-        delete r.timeout;
-        res.json(r);
-    }, r.timeout);
-});
-
-app.post("*", (req, res) => {
-    let r = req.mockData;
-    setTimeout(() => {
-        delete r.timeout
-        res.json(r);
-    }, r.timeout)
+mockRule.forEach((mock) => {
+    app.get(mock.path, (req, res) => {
+        let initData = Mock.mock(mock.data);
+        let time = resTimeout(mock.timeout);
+        let data = {...resType, data: initData}
+        setTimeout(() => {
+            res.json(data);
+        }, time);
+    });
+    app.post(mock.path, (req, res) => {
+        let initData = Mock.mock(mock.data);
+        let time = resTimeout(mock.timeout);
+        let data = {...resType, data: initData}
+        setTimeout(() => {
+            res.json(data);
+        }, time);
+    });
 });
 
 app.listen(port, () => console.log(`mock app listening on port ${port}!`));
